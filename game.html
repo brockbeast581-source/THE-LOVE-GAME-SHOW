@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Love Game Show</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI, sans-serif;
+  overflow-x:hidden;
+  transition:0.4s;
+}
+.page{
+  display:none;
+  min-height:100vh;
+  padding:20px;
+  text-align:center;
+}
+button{
+  padding:10px 20px;
+  margin:8px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-size:16px;
+}
+.lives{
+  font-size:22px;
+  margin-bottom:10px;
+}
+.center{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* THEMES */
+.home{background:#0f0f1a;color:#fff;}
+.ttt{background:#111827;color:#fff;}
+.rps{background:#ffe4ec;}
+.memory{background:#fff0f5;}
+.congrats{background:linear-gradient(135deg,#ffd700,#ffb6c1);}
+.video{background:#fff5f8;}
+
+/* TTT */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(3,80px);
+  gap:5px;
+  justify-content:center;
+}
+.cell{
+  width:80px;
+  height:80px;
+  background:#1f2937;
+  color:#fff;
+  font-size:30px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+/* MEMORY */
+.memory-grid{
+  display:grid;
+  grid-template-columns:repeat(5,70px);
+  gap:8px;
+  justify-content:center;
+}
+.card{
+  width:70px;
+  height:70px;
+  background:#ff69b4;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  cursor:pointer;
+  border-radius:8px;
+}
+.hidden{background:#ff69b4;color:transparent;}
+.matched{background:#32cd32;color:white;}
+
+@media(min-width:900px){
+  .memory-grid{grid-template-columns:repeat(5,100px);}
+  .card{width:100px;height:100px;}
+}
+
+/* Video */
+video{
+  width:100%;
+  max-width:700px;
+  border-radius:15px;
+}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+<div class="page home center" id="home">
+<h1>🎮 WELCOME TO THE LOVE GAME SHOW 🎮</h1>
+<p>You have 3 lives. Win 3 games. Lose all lives → restart.</p>
+<button onclick="startGame()">Start Game</button>
+</div>
+
+<!-- TTT -->
+<div class="page ttt center" id="ttt">
+<div class="lives" id="livesDisplay"></div>
+<h2>Tic Tac Toe</h2>
+<div class="grid" id="tttGrid"></div>
+</div>
+
+<!-- RPS -->
+<div class="page rps center" id="rps">
+<div class="lives" id="livesDisplay2"></div>
+<h2>Stone Paper Scissors</h2>
+<button onclick="playRPS('rock')">🪨</button>
+<button onclick="playRPS('paper')">📄</button>
+<button onclick="playRPS('scissors')">✂</button>
+<p id="rpsResult"></p>
+</div>
+
+<!-- MEMORY -->
+<div class="page memory center" id="memory">
+<div class="lives" id="livesDisplay3"></div>
+<h2>Memory Match</h2>
+<p>Time: <span id="timer">90</span>s</p>
+<div class="memory-grid" id="memoryGrid"></div>
+</div>
+
+<!-- CONGRATS -->
+<div class="page congrats center" id="congrats">
+<h1>🏆 CONGRATULATIONS CJ SAI AARTHI 🏆</h1>
+<p>You survived every round.</p>
+<p>You beat the clock. You beat the odds.</p>
+<button onclick="showPage('video')">Claim Your Reward 🎁</button>
+</div>
+
+<!-- VIDEO -->
+<div class="page video center" id="video">
+<h2>This is 8 minutes of my heart ❤️</h2>
+<video controls>
+<source src="mymessage.mp4" type="video/mp4">
+</video>
+</div>
+
+<script>
+
+/* ---------- BASIC SYSTEM ---------- */
+
+let lives=3;
+function updateLives(){
+ document.querySelectorAll(".lives").forEach(e=>{
+   e.innerHTML="Lives: "+"❤️".repeat(lives);
+ });
+ if(lives<=0){ resetGame(); }
+}
+function showPage(id){
+ document.querySelectorAll(".page").forEach(p=>p.style.display="none");
+ document.getElementById(id).style.display="flex";
+}
+function resetGame(){
+ alert("Game Over! Restarting...");
+ lives=3;
+ showPage("home");
+}
+function startGame(){
+ lives=3;
+ updateLives();
+ showPage("ttt");
+ initTTT();
+}
+
+/* ---------- SOUND (LIGHTWEIGHT) ---------- */
+
+const ctx=new (window.AudioContext||window.webkitAudioContext)();
+function beep(freq,dur){
+ const osc=ctx.createOscillator();
+ osc.frequency.value=freq;
+ osc.connect(ctx.destination);
+ osc.start();
+ setTimeout(()=>osc.stop(),dur);
+}
+
+/* ---------- TIC TAC TOE ---------- */
+
+let board=["","","","","","","","",""];
+function initTTT(){
+ board=["","","","","","","","",""];
+ const grid=document.getElementById("tttGrid");
+ grid.innerHTML="";
+ board.forEach((v,i)=>{
+   let cell=document.createElement("div");
+   cell.className="cell";
+   cell.onclick=()=>makeMove(i);
+   grid.appendChild(cell);
+ });
+ updateLives();
+}
+function makeMove(i){
+ if(board[i]!=="") return;
+ board[i]="X";
+ document.getElementsByClassName("cell")[i].innerText="X";
+ beep(400,100);
+ if(checkWin("X")){ beep(800,300); showPage("rps"); return;}
+ computerMove();
+}
+function computerMove(){
+ let empty=board.map((v,i)=>v==""?i:null).filter(v=>v!==null);
+ if(empty.length===0) return;
+ let move=empty[Math.floor(Math.random()*empty.length)];
+ board[move]="O";
+ document.getElementsByClassName("cell")[move].innerText="O";
+ if(checkWin("O")){
+   lives--; beep(200,300);
+   updateLives();
+   initTTT();
+ }
+}
+function checkWin(p){
+ const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+ return wins.some(c=>c.every(i=>board[i]==p));
+}
+
+/* ---------- RPS ---------- */
+
+function playRPS(player){
+ const options=["rock","paper","scissors"];
+ const comp=options[Math.floor(Math.random()*3)];
+ if(player===comp){document.getElementById("rpsResult").innerText="Draw!";}
+ else if(
+   (player=="rock"&&comp=="scissors")||
+   (player=="paper"&&comp=="rock")||
+   (player=="scissors"&&comp=="paper")
+ ){
+   beep(700,200);
+   showPage("memory");
+   startMemory();
+ }else{
+   lives--; beep(200,300);
+   updateLives();
+ }
+}
+
+/* ---------- MEMORY ---------- */
+
+let first=null, second=null, lock=false, matches=0, timeLeft=90, timerInt;
+
+function startMemory(){
+ matches=0;
+ timeLeft=90;
+ updateLives();
+ document.getElementById("timer").innerText=timeLeft;
+ const emojis=["🐰","🦆","🎂","❤️","🌸","💖","✨","🥰","🔥","🌟"];
+ let cards=[...emojis,...emojis];
+ cards.sort(()=>Math.random()-0.5);
+ const grid=document.getElementById("memoryGrid");
+ grid.innerHTML="";
+ cards.forEach(e=>{
+   let card=document.createElement("div");
+   card.className="card hidden";
+   card.dataset.val=e;
+   card.onclick=()=>flip(card);
+   grid.appendChild(card);
+ });
+ clearInterval(timerInt);
+ timerInt=setInterval(()=>{
+   timeLeft--;
+   document.getElementById("timer").innerText=timeLeft;
+   if(timeLeft<=0){
+     lives--; updateLives();
+     startMemory();
+   }
+ },1000);
+}
+
+function flip(card){
+ if(lock||!card.classList.contains("hidden")) return;
+ card.classList.remove("hidden");
+ card.innerText=card.dataset.val;
+ if(!first){first=card; return;}
+ second=card;
+ lock=true;
+ if(first.dataset.val===second.dataset.val){
+   first.classList.add("matched");
+   second.classList.add("matched");
+   matches++;
+   beep(600,150);
+   first=second=null;
+   lock=false;
+   if(matches===10){
+     clearInterval(timerInt);
+     beep(900,400);
+     showPage("congrats");
+   }
+ }else{
+   setTimeout(()=>{
+     first.classList.add("hidden");
+     second.classList.add("hidden");
+     first.innerText="";
+     second.innerText="";
+     lives--; updateLives();
+     first=second=null;
+     lock=false;
+   },600);
+ }
+}
+
+/* INIT */
+showPage("home");
+
+</script>
+</body>
+</html>
