@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>The Love Game Show</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#111;
+color:white;
+text-align:center;
+}
+
+.page{
+display:none;
+padding:20px;
+}
+
+.active{
+display:block;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+border:none;
+border-radius:8px;
+background:#ff4081;
+color:white;
+cursor:pointer;
+margin-top:20px;
+}
+
+h1{
+font-size:40px;
+}
+
+.lives{
+font-size:22px;
+margin:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(5,70px);
+gap:10px;
+justify-content:center;
+margin-top:20px;
+}
+
+.card{
+width:70px;
+height:70px;
+background:#444;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+cursor:pointer;
+border-radius:8px;
+}
+
+.hidden{
+background:#444;
+color:transparent;
+}
+
+.tic{
+display:grid;
+grid-template-columns:repeat(3,100px);
+gap:10px;
+justify-content:center;
+margin-top:20px;
+}
+
+.cell{
+width:100px;
+height:100px;
+background:#333;
+font-size:40px;
+display:flex;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+}
+
+video{
+width:90%;
+max-width:600px;
+border-radius:12px;
+margin-top:20px;
+}
+
+.timer{
+font-size:24px;
+margin-top:10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HOME PAGE -->
+
+<div class="page active" id="home">
+
+<h1>🎮 THE LOVE GAME SHOW</h1>
+
+<p>
+Ladies and Gentlemen…<br><br>
+
+Welcome to the most exciting challenge ever created.<br><br>
+
+Tonight’s contestant is none other than…<br><br>
+
+✨ Aarthi ✨
+</p>
+
+<p>
+To unlock the final surprise you must win every round.
+</p>
+
+<p>
+Rules:<br>
+• You have 3 lives ❤️<br>
+• Lose all lives → Game Over<br>
+• Beat all games → Unlock the final reward
+</p>
+
+<button onclick="startGame()">Start The Game</button>
+
+</div>
+
+<!-- TIC TAC TOE -->
+
+<div class="page" id="tictactoe">
+
+<h1>Round 1 – Tic Tac Toe</h1>
+
+<div class="lives" id="lives"></div>
+
+<div class="tic" id="board"></div>
+
+<p id="ticStatus"></p>
+
+</div>
+
+<!-- ROCK PAPER -->
+
+<div class="page" id="rps">
+
+<h1>Round 2 – Rock Paper Scissors</h1>
+
+<div class="lives" id="lives2"></div>
+
+<button onclick="playRPS('rock')">✊ Rock</button>
+<button onclick="playRPS('paper')">✋ Paper</button>
+<button onclick="playRPS('scissors')">✌ Scissors</button>
+
+<p id="rpsResult"></p>
+
+</div>
+
+<!-- MEMORY GAME -->
+
+<div class="page" id="memory">
+
+<h1>Round 3 – Memory Challenge</h1>
+
+<div class="lives" id="lives3"></div>
+
+<div class="timer" id="timer">Time: 90</div>
+
+<div class="grid" id="memoryGrid"></div>
+
+</div>
+
+<!-- TAP GAME -->
+
+<div class="page" id="tap">
+
+<h1>Final Game – Speed Tap</h1>
+
+<div class="lives" id="lives4"></div>
+
+<p>Tap the button 20 times in 10 seconds!</p>
+
+<div class="timer" id="tapTimer">10</div>
+
+<button onclick="tap()">TAP!</button>
+
+<p id="tapScore"></p>
+
+</div>
+
+<!-- CONGRATS -->
+
+<div class="page" id="congrats">
+
+<h1>✨ CONGRATULATIONS ✨</h1>
+
+<h2>CJ Sai Aarthi</h2>
+
+<p>
+
+After every challenge…<br>
+After every round…<br><br>
+
+You never gave up.<br><br>
+
+You defeated the puzzles.<br>
+You survived the timer.<br>
+You conquered the game.<br><br>
+
+And now we have our winner.<br><br>
+
+💖 CJ Sai Aarthi 💖<br><br>
+
+But this journey was never just about winning games…<br><br>
+
+Someone created this entire game show just for you.<br><br>
+
+Behind the next button…<br>
+Your final surprise is waiting.
+
+</p>
+
+<button onclick="showPage('video')">Reveal My Surprise</button>
+
+</div>
+
+<!-- VIDEO PAGE -->
+
+<div class="page" id="video">
+
+<h1>Your Final Reward ❤️</h1>
+
+<p>This message was made just for you.</p>
+
+<video controls>
+<source src="mymessage.mp4" type="video/mp4">
+</video>
+
+</div>
+
+<script>
+
+let lives=3;
+
+function updateLives(){
+document.getElementById("lives").innerText="Lives ❤️ "+lives;
+document.getElementById("lives2").innerText="Lives ❤️ "+lives;
+document.getElementById("lives3").innerText="Lives ❤️ "+lives;
+document.getElementById("lives4").innerText="Lives ❤️ "+lives;
+}
+
+function loseLife(){
+lives--;
+updateLives();
+if(lives<=0){
+alert("Game Over");
+location.reload();
+}
+}
+
+function showPage(id){
+document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+document.getElementById(id).classList.add("active");
+}
+
+function startGame(){
+updateLives();
+showPage("tictactoe");
+createBoard();
+}
+
+let board=[];
+let player="X";
+
+function createBoard(){
+
+board=["","","","","","","","",""];
+let grid=document.getElementById("board");
+grid.innerHTML="";
+
+board.forEach((v,i)=>{
+let cell=document.createElement("div");
+cell.className="cell";
+cell.onclick=()=>move(i);
+grid.appendChild(cell);
+});
+
+}
+
+function move(i){
+
+if(board[i]!="")return;
+
+board[i]="X";
+draw();
+
+if(checkWin("X")){
+setTimeout(()=>showPage("rps"),800);
+return;
+}
+
+let ai=Math.floor(Math.random()*9);
+
+while(board[ai]!=""){
+ai=Math.floor(Math.random()*9);
+}
+
+board[ai]="O";
+draw();
+
+if(checkWin("O")){
+loseLife();
+createBoard();
+}
+
+}
+
+function draw(){
+let cells=document.querySelectorAll(".cell");
+cells.forEach((c,i)=>c.innerText=board[i]);
+}
+
+function checkWin(p){
+
+const wins=[
+[0,1,2],[3,4,5],[6,7,8],
+[0,3,6],[1,4,7],[2,5,8],
+[0,4,8],[2,4,6]
+];
+
+return wins.some(w=>w.every(i=>board[i]==p));
+
+}
+
+function playRPS(p){
+
+const arr=["rock","paper","scissors"];
+let c=arr[Math.floor(Math.random()*3)];
+
+if(p===c){
+document.getElementById("rpsResult").innerText="Draw";
+return;
+}
+
+if(
+(p==="rock"&&c==="scissors")||
+(p==="paper"&&c==="rock")||
+(p==="scissors"&&c==="paper")
+){
+showPage("memory");
+startMemory();
+}else{
+loseLife();
+}
+
+}
+
+let cards=[
+"🍎","🍎","🍌","🍌","🍇","🍇","🍉","🍉","🍓","🍓",
+"🍒","🍒","🥝","🥝","🍍","🍍","🥥","🥥","🍑","🍑"
+];
+
+let first=null;
+let second=null;
+let lock=false;
+
+function startMemory(){
+
+cards.sort(()=>0.5-Math.random());
+
+let grid=document.getElementById("memoryGrid");
+grid.innerHTML="";
+
+cards.forEach((c,i)=>{
+
+let div=document.createElement("div");
+div.className="card hidden";
+div.innerText=c;
+
+div.onclick=()=>flip(div,c);
+
+grid.appendChild(div);
+
+});
+
+startTimer();
+
+}
+
+function flip(div,c){
+
+if(lock||!div.classList.contains("hidden"))return;
+
+div.classList.remove("hidden");
+
+if(!first){
+first={div,c};
+return;
+}
+
+second={div,c};
+lock=true;
+
+if(first.c===second.c){
+
+first=null;
+second=null;
+lock=false;
+
+if(document.querySelectorAll(".hidden").length===0){
+showPage("tap");
+startTap();
+}
+
+}else{
+
+setTimeout(()=>{
+first.div.classList.add("hidden");
+second.div.classList.add("hidden");
+first=null;
+second=null;
+lock=false;
+},800);
+
+}
+
+}
+
+let time=90;
+let timer;
+
+function startTimer(){
+
+time=90;
+
+timer=setInterval(()=>{
+
+time--;
+
+document.getElementById("timer").innerText="Time: "+time;
+
+if(time<=0){
+
+clearInterval(timer);
+loseLife();
+startMemory();
+
+}
+
+},1000);
+
+}
+
+let taps=0;
+let tapTime=10;
+let tapTimer;
+
+function startTap(){
+
+taps=0;
+tapTime=10;
+
+tapTimer=setInterval(()=>{
+
+tapTime--;
+
+document.getElementById("tapTimer").innerText=tapTime;
+
+if(tapTime<=0){
+
+clearInterval(tapTimer);
+
+if(taps>=20){
+showPage("congrats");
+}else{
+loseLife();
+startTap();
+}
+
+}
+
+},1000);
+
+}
+
+function tap(){
+
+taps++;
+document.getElementById("tapScore").innerText="Taps: "+taps;
+
+}
+
+</script>
+
+</body>
+</html>
