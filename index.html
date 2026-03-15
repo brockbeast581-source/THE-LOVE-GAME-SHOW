@@ -3,253 +3,227 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>The Love Game Show</title>
-<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&family=Fredoka+One&display=swap" rel="stylesheet">
 
 <style>
-
 body{
-margin:0;
-font-family:'Quicksand', sans-serif;
-background:linear-gradient(135deg, #1a001f, #2b0a3d, #3a0f4f);
-color:white;
-text-align:center;
+  margin:0;
+  font-family:'Quicksand', sans-serif;
+  background:linear-gradient(135deg, #1a001f, #2b0a3d, #3a0f4f);
+  color:white;
+  text-align:center;
 }
 
 .page{
-display:none;
-padding:20px;
+  display:none;
+  padding:20px;
 }
 
 .active{
-display:block;
+  display:block;
 }
 
+/* Headings */
+h1, h2{
+  font-family:'Fredoka One', cursive;
+  color:#ff66cc;
+  text-shadow: 2px 2px 8px rgba(255,0,128,0.5);
+}
+
+/* Buttons */
 button{
-padding:12px 25px;
-font-size:18px;
-border:none;
-border-radius:8px;
-background:#ff4081;
-color:white;
-cursor:pointer;
-margin-top:20px;
+  padding:12px 25px;
+  font-size:18px;
+  border:none;
+  border-radius:12px;
+  background: linear-gradient(45deg,#ff4081,#ff80bf);
+  color:white;
+  cursor:pointer;
+  margin-top:20px;
+  box-shadow: 0 4px 15px rgba(255,64,129,0.6);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+button:hover{
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(255,64,129,0.9);
 }
 
-h1{
-font-size:40px;
-}
-
+/* Lives */
 .lives{
-font-size:22px;
-margin:10px;
+  font-size:22px;
+  margin:10px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(5,70px);
-gap:10px;
-justify-content:center;
-margin-top:20px;
-}
-
-.card{
-width:70px;
-height:70px;
-background:#444;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-cursor:pointer;
-border-radius:8px;
-}
-
-.hidden{
-background:#444;
-color:transparent;
-}
-
+/* Tic Tac Toe */
 .tic{
-display:grid;
-grid-template-columns:repeat(3,100px);
-gap:10px;
-justify-content:center;
-margin-top:20px;
+  display:grid;
+  grid-template-columns:repeat(3,100px);
+  gap:10px;
+  justify-content:center;
+  margin-top:20px;
 }
-
 .cell{
-width:100px;
-height:100px;
-background:#333;
-font-size:40px;
-display:flex;
-align-items:center;
-justify-content:center;
-cursor:pointer;
+  width:100px;
+  height:100px;
+  background:#2b0a3d;
+  font-size:40px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  border-radius:12px;
+  box-shadow: 0 4px 12px rgba(255,64,129,0.4);
+  transition: transform 0.1s;
+}
+.cell:hover{
+  transform: scale(1.05);
+  background:#3a0f4f;
 }
 
-video{
-width:90%;
-max-width:600px;
-border-radius:12px;
-margin-top:20px;
+/* Memory Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(5,70px);
+  gap:10px;
+  justify-content:center;
+  margin-top:20px;
+}
+.card{
+  width:70px;
+  height:70px;
+  background:#2b0a3d;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  cursor:pointer;
+  border-radius:8px;
+  color:transparent;
+  transition: transform 0.1s;
+}
+.card:hover{
+  transform: scale(1.1);
+  background:#3a0f4f;
 }
 
+/* Timer */
 .timer{
-font-size:24px;
-margin-top:10px;
+  font-size:24px;
+  margin-top:10px;
 }
 
+/* Tap Game */
+#tap button{
+  font-size:22px;
+  padding:15px 35px;
+}
+
+/* Final Message */
+#finalMessage p{
+  max-width:750px; 
+  margin:30px auto; 
+  line-height:2; 
+  font-size:21px; 
+  color:#fff0f5; 
+  background:rgba(255,255,255,0.08); 
+  padding:25px; 
+  border-radius:20px; 
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  text-align:left;
+}
 </style>
 </head>
 
 <body>
 
 <!-- HOME PAGE -->
-
 <div class="page active" id="home">
-
 <h1>🎮 THE LOVE GAME SHOW</h1>
-
 <p>
 Ladies and Gentlemen…<br><br>
-
 Welcome to the most exciting challenge ever created.<br><br>
-
 Tonight’s contestant is none other than…<br><br>
-
 ✨ Aarthi ✨
 </p>
-
 <p>
 To unlock the final surprise you must win every round.
 </p>
-
 <p>
 Rules:<br>
 • You have 3 lives ❤️<br>
 • Lose all lives → Game Over<br>
 • Beat all games → Unlock the final reward
 </p>
-
 <button onclick="startGame()">Start The Game</button>
-
 </div>
 
 <!-- TIC TAC TOE -->
-
 <div class="page" id="tictactoe">
-
 <h1>Round 1 – Tic Tac Toe</h1>
-
 <div class="lives" id="lives"></div>
-
 <div class="tic" id="board"></div>
-
 <p id="ticStatus"></p>
-
 </div>
 
-<!-- ROCK PAPER -->
-
+<!-- ROCK PAPER SCISSORS -->
 <div class="page" id="rps">
-
 <h1>Round 2 – Rock Paper Scissors</h1>
-
 <div class="lives" id="lives2"></div>
-
 <button onclick="playRPS('rock')">✊ Rock</button>
 <button onclick="playRPS('paper')">✋ Paper</button>
 <button onclick="playRPS('scissors')">✌ Scissors</button>
-
 <p id="rpsResult"></p>
-
 </div>
 
 <!-- MEMORY GAME -->
-
 <div class="page" id="memory">
-
 <h1>Round 3 – Memory Challenge</h1>
-
 <div class="lives" id="lives3"></div>
-
 <div class="timer" id="timer">Time: 90</div>
-
 <div class="grid" id="memoryGrid"></div>
-
 </div>
 
 <!-- TAP GAME -->
-
 <div class="page" id="tap">
-
 <h1>Final Game – Speed Tap</h1>
-
 <div class="lives" id="lives4"></div>
-
 <p>Tap the button 20 times in 10 seconds!</p>
-
 <div class="timer" id="tapTimer">10</div>
-
 <button onclick="tap()">TAP!</button>
-
 <p id="tapScore"></p>
-
 </div>
 
 <!-- CONGRATS -->
-
 <div class="page" id="congrats">
-
 <h1>✨ CONGRATULATIONS ✨</h1>
-
 <h2>CJ Sai Aarthi</h2>
-
 <p>
-
 After every challenge…<br>
 After every round…<br><br>
-
 You never gave up.<br><br>
-
 You defeated the puzzles.<br>
 You survived the timer.<br>
 You conquered the game.<br><br>
-
 And now we have our winner.<br><br>
-
 💖 CJ Sai Aarthi 💖<br><br>
-
-But this journey was never just about winning games…<br><br>
-
-Someone created this entire game show just for you.<br><br>
-
 Behind the next button…<br>
 Your final surprise is waiting.
-
 </p>
-
 <button onclick="showPage('finalMessage')">Reveal My Surprise</button>
-
 </div>
 
-  <!-- FINAL MESSAGE PAGE -->
-
+<!-- FINAL MESSAGE PAGE -->
 <div class="page" id="finalMessage">
-
 <h1>Your Final Reward ❤️</h1>
-  <p style="max-width:750px; margin:30px auto; line-height:2; font-size:21px; color:#fff0f5; background:rgba(255,255,255,0.08); padding:25px; border-radius:20px; box-shadow:0 8px 20px rgba(0,0,0,0.25);">
+<p>
 See baby… 🥺💖 I know our love is a little bit complicated, messy, dramatic, and sometimes even feels like one full-time serial with no ending 😭📺, but even after all that, one thing I want you to always remember is this — I am with you, always and forever 🫂❤️. I know we are facing so many things in real life, and I know it hurts you when your parents are not talking to you like before 😔, and I know there are days where your heart feels heavy and your smile hides so much pain… but baby, please don’t ever think you have to carry all of that alone anymore 💞. From now on, your pain is my pain, your tears are my tears, your happiness is my happiness, and your life is my favorite responsibility 🥹💗. We may be going through a lot, we may fight, we may overthink, we may act stubborn, and sometimes you may roast me, ignore me, or behave like one small angry duck 🦆😤… but still, even in all that chaos, I only end up loving you more and more every single day 😭❤️. I swear, our love may be hard, but it is also the most beautiful thing that ever happened to me 🌸✨. Just like this game, life is throwing us puzzles, struggles, levels, and impossible missions 🎮🧩, but no matter what comes, we will solve every real-life puzzle together, step by step, hand in hand 🤝💖. Even if the whole world stands against us, I will still stand beside you like your personal bodyguard, unpaid therapist, full-time lover, and part-time clown 🤺😂❤️. I will never leave you, baby, no matter what happens, no matter how hard life gets, no matter how many storms come — I will stay, I will fight, and I will choose you again and again and again 🌍💞. You are my peace in chaos, my comfort in pain, my happiness in sadness, my safe place, my home, and my biggest blessing 🏡💗. My sweet potato 🥔💛, my boiled egg 🥚🤍, my kutty vaaathu 🦆💛, my little baby 🐰💖, my overacting queen 👑😂, my drama piece 🎭💕, and still my most precious person in this whole universe 🌙✨. Sometimes you irritate me, sometimes you test my patience, sometimes you act like you are innocent while doing full crime 😏😂, but honestly, even your nonsense is cute to me and even your anger feels lovable because it is YOU 😭💘. And do you know something? After all this waiting, all these years, all these feelings, all these silent prayers, and everything my heart went through… now it is no longer you or me, baby… now it is US 🫶❤️, and trust me, this “US” is worth every second of my waiting, every tear, every prayer, and every heartbeat that chose you from the beginning 💍✨. So on your special day, I just want to say thank you for existing, thank you for being mine, thank you for making my life more beautiful, more meaningful, more chaotic, and definitely more cute 😭💖. Happy Birthday, my love 🎂🎉💞. No matter what happens in this life, I will love you till my very last breath, I will hold your hand through every storm, and one day we will look back at all these struggles and smile because we made it together 🫂🌸❤️. I love you so much, my baby… more than words, more than distance, more than fear, and more than this whole world can ever understand 💖🌍✨.
 </p>
-</p>
-
 </div>
 
 <script>
-
 let lives=3;
 
 function updateLives(){
@@ -279,229 +253,103 @@ showPage("tictactoe");
 createBoard();
 }
 
+/* TIC TAC TOE */
 let board=[];
-let player="X";
-
 function createBoard(){
-
 board=["","","","","","","","",""];
 let grid=document.getElementById("board");
 grid.innerHTML="";
-
 board.forEach((v,i)=>{
 let cell=document.createElement("div");
 cell.className="cell";
 cell.onclick=()=>move(i);
 grid.appendChild(cell);
 });
-
 }
 
 function move(i){
-
 if(board[i]!="")return;
-
-board[i]="X";
-draw();
-
+board[i]="X"; draw();
 if(checkWin("X")){
 setTimeout(()=>showPage("rps"),800);
 return;
 }
-
 let ai=Math.floor(Math.random()*9);
-
-while(board[ai]!=""){
-ai=Math.floor(Math.random()*9);
+while(board[ai]!=""){ ai=Math.floor(Math.random()*9);}
+board[ai]="O"; draw();
+if(checkWin("O")){ loseLife(); createBoard();}
 }
 
-board[ai]="O";
-draw();
-
-if(checkWin("O")){
-loseLife();
-createBoard();
-}
-
-}
-
-function draw(){
-let cells=document.querySelectorAll(".cell");
-cells.forEach((c,i)=>c.innerText=board[i]);
-}
-
+function draw(){ document.querySelectorAll(".cell").forEach((c,i)=>c.innerText=board[i]); }
 function checkWin(p){
-
-const wins=[
-[0,1,2],[3,4,5],[6,7,8],
-[0,3,6],[1,4,7],[2,5,8],
-[0,4,8],[2,4,6]
-];
-
+const wins=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
 return wins.some(w=>w.every(i=>board[i]==p));
-
 }
 
+/* ROCK PAPER SCISSORS */
 function playRPS(p){
-
 const arr=["rock","paper","scissors"];
 let c=arr[Math.floor(Math.random()*3)];
-
-if(p===c){
-document.getElementById("rpsResult").innerText="Draw";
-return;
+if(p===c){ document.getElementById("rpsResult").innerText="Draw"; return;}
+if((p==="rock"&&c==="scissors")||(p==="paper"&&c==="rock")||(p==="scissors"&&c==="paper")){
+showPage("memory"); startMemory();
+}else{ loseLife();}
 }
 
-if(
-(p==="rock"&&c==="scissors")||
-(p==="paper"&&c==="rock")||
-(p==="scissors"&&c==="paper")
-){
-showPage("memory");
-startMemory();
-}else{
-loseLife();
-}
-
-}
-
-let cards=[
-"🍎","🍎","🍌","🍌","🍇","🍇","🍉","🍉","🍓","🍓",
-"🍒","🍒","🥝","🥝","🍍","🍍","🥥","🥥","🍑","🍑"
-];
-
-let first=null;
-let second=null;
-let lock=false;
+/* MEMORY GAME */
+let cards=["🍎","🍎","🍌","🍌","🍇","🍇","🍉","🍉","🍓","🍓","🍒","🍒","🥝","🥝","🍍","🍍","🥥","🥥","🍑","🍑"];
+let first=null; let second=null; let lock=false; let time=90; let timer;
 
 function startMemory(){
-
 cards.sort(()=>0.5-Math.random());
-
 let grid=document.getElementById("memoryGrid");
 grid.innerHTML="";
-
 cards.forEach((c,i)=>{
-
 let div=document.createElement("div");
-div.className="card hidden";
-div.innerText=c;
-
+div.className="card hidden"; div.innerText=c;
 div.onclick=()=>flip(div,c);
-
 grid.appendChild(div);
-
 });
-
 startTimer();
-
 }
 
 function flip(div,c){
-
 if(lock||!div.classList.contains("hidden"))return;
-
 div.classList.remove("hidden");
-
-if(!first){
-first={div,c};
-return;
-}
-
-second={div,c};
-lock=true;
-
+if(!first){ first={div,c}; return;}
+second={div,c}; lock=true;
 if(first.c===second.c){
-
-first=null;
-second=null;
-lock=false;
-
-if(document.querySelectorAll(".hidden").length===0){
-showPage("tap");
-startTap();
-}
-
+first=null; second=null; lock=false;
+if(document.querySelectorAll(".hidden").length===0){ showPage("tap"); startTap();}
 }else{
-
 setTimeout(()=>{
 first.div.classList.add("hidden");
 second.div.classList.add("hidden");
-first=null;
-second=null;
-lock=false;
+first=null; second=null; lock=false;
 },800);
-
 }
-
 }
-
-let time=90;
-let timer;
 
 function startTimer(){
-
 time=90;
-
 timer=setInterval(()=>{
-
 time--;
-
 document.getElementById("timer").innerText="Time: "+time;
-
-if(time<=0){
-
-clearInterval(timer);
-loseLife();
-startMemory();
-
-}
-
+if(time<=0){ clearInterval(timer); loseLife(); startMemory(); }
 },1000);
-
 }
 
-let taps=0;
-let tapTime=10;
-let tapTimer;
-
-function startTap(){
-
-taps=0;
-tapTime=10;
-
+/* TAP GAME */
+let taps=0; let tapTime=10; let tapTimer;
+function startTap(){ taps=0; tapTime=10;
 tapTimer=setInterval(()=>{
-
 tapTime--;
-
 document.getElementById("tapTimer").innerText=tapTime;
-
-if(tapTime<=0){
-
-clearInterval(tapTimer);
-
-if(taps>=20){
-showPage("congrats");
-}else{
-loseLife();
-startTap();
-}
-
-}
-
+if(tapTime<=0){ clearInterval(tapTimer); if(taps>=20){ showPage("congrats"); }else{ loseLife(); startTap(); } }
 },1000);
-
 }
-
-function tap(){
-
-taps++;
-document.getElementById("tapScore").innerText="Taps: "+taps;
-
-}
-
+function tap(){ taps++; document.getElementById("tapScore").innerText="Taps: "+taps;}
 </script>
 
 </body>
-
 </html>
